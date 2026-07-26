@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+    <title>06届毕业20周年聚会问卷</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(180deg, #d2e1ff 0%, #84acff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ===== Cover Page ===== */
+        #coverPage {
+            width: 100%;
+            max-width: 520px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 16px 40px;
+            position: relative;
+        }
+        .cover-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #262626;
+            text-align: center;
+            margin: 20px 0 18px;
+            padding: 0 20px;
+            position: relative;
+            display: inline-block;
+        }
+        .cover-title::before,
+        .cover-title::after {
+            content: "";
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            background-size: cover;
+        }
+        .cover-title::before {
+            left: -40px;
+            top: -10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Cpath d='M26 0C11.64 0 0 11.64 0 26s11.64 26 26 26 26-11.64 26-26S40.36 0 26 0z' fill='%232068FF' opacity='0.15'/%3E%3Cpath d='M26 4C13.85 4 4 13.85 4 26s9.85 22 22 22 22-9.85 22-22S38.15 4 26 4z' fill='%232068FF' opacity='0.1'/%3E%3C/svg%3E");
+        }
+        .cover-title::after {
+            right: -40px;
+            bottom: -10px;
+            transform: rotate(180deg);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Cpath d='M26 0C11.64 0 0 11.64 0 26s11.64 26 26 26 26-11.64 26-26S40.36 0 26 0z' fill='%232068FF' opacity='0.15'/%3E%3Cpath d='M26 4C13.85 4 4 13.85 4 26s9.85 22 22 22 22-9.85 22-22S38.15 4 26 4z' fill='%232068FF' opacity='0.1'/%3E%3C/svg%3E");
+        }
+
+        /* ===== Schedule Card ===== */
+        .schedule-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            overflow: hidden;
+            cursor: zoom-in;
+            transition: transform 0.2s;
+            position: relative;
+        }
+        .schedule-card:active {
+            transform: scale(0.98);
+        }
+        .schedule-header {
+            background: linear-gradient(135deg, #1a5632, #2d8a4e);
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .schedule-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .schedule-header-text {
+            flex: 1;
+        }
+        .schedule-header-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .schedule-header-sub {
+            color: rgba(255,255,255,0.85);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+        .schedule-body {
+            padding: 14px 16px;
+        }
+        .schedule-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #2068FF;
+        }
+        .day-block {
+            margin-bottom: 14px;
+        }
+        .day-block:last-child {
+            margin-bottom: 0;
+        }
+        .day-label {
+            display: inline-block;
+            background: #2068FF;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+        }
+        .day-content {
+            font-size: 13px;
+            color: #404040;
+            line-height: 1.7;
+            padding-left: 4px;
+        }
+        .day-content .module-title {
+            font-weight: 600;
+            color: #1a5632;
+            margin-top: 6px;
+        }
+        .day-content .time-item {
+            padding-left: 8px;
+            position: relative;
+        }
+        .day-content .time-item::before {
+            content: "·";
+            position: absolute;
+            left: 0;
+            color: #2068FF;
+            font-weight: bold;
+        }
+
+        /* ===== Zoom Modal ===== */
+        .zoom-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .zoom-overlay.active {
+            display: flex;
+        }
+        .zoom-overlay .schedule-card {
+            max-width: 520px;
+            margin: 30px auto;
+            cursor: zoom-out;
+            transform: none !important;
+        }
+        .zoom-close {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        /* ===== Start Button ===== */
+        .start-btn {
+            display: inline-block;
+            margin: 24px auto 10px;
+            padding: 14px 60px;
+            background: #2068FF;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(32,104,255,0.35);
+            transition: all 0.2s;
+        }
+        .start-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(32,104,255,0.25);
+        }
+
+        /* ===== Form Page ===== */
+        #formPage {
+            display: none;
+            width: 100%;
+            max-width: 520px;
+            padding: 20px 16px 40px;
+        }
+        .form-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .form-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #262626;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .form-subtitle {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .question-item {
+            margin-bottom: 18px;
+        }
+        .question-item:last-child {
+            margin-bottom: 0;
+        }
+        .q-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .q-label .required {
+            color: #ff4d4f;
+            margin-right: 3px;
+        }
+        .q-label .q-num {
+            color: #2068FF;
+            margin-right: 4px;
+        }
+        .q-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fafafa;
+        }
+        .q-input:focus {
+            border-color: #2068FF;
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(32,104,255,0.1);
+        }
+        .q-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+        .radio-option .radio-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            margin-right: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .radio-option .radio-circle::after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2068FF;
+            transform: scale(0);
+            transition: transform 0.2s;
+        }
+        .radio-option.selected {
+            border-color: #2068FF;
+            background: #f0f5ff;
+        }
+        .radio-option.selected .radio-circle {
+            border-color: #2068FF;
+        }
+        .radio-option.selected .radio-circle::after {
+            transform: scale(1);
+        }
+        .radio-option .radio-text {
+            font-size: 15px;
+            color: #404040;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #2068FF;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(32,104,255,0.3);
+        }
+        .submit-btn:active {
+            transform: scale(0.97);
+        }
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== Success Page ===== */
+        #successPage {
+            display: none;
+            width: 100%;
+            max-width: 520px;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #52c41a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: #fff;
+        }
+        .success-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #262626;
+            margin-bottom: 8px;
+        }
+        .success-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 10px 0 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+        .footer a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9998;
+            display: none;
+            text-align: center;
+            max-width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- ===== Cover Page ===== -->
+<div id="coverPage">
+    <div class="cover-title">06届毕业20周年聚会问卷</div>
+
+    <div class="schedule-card" id="scheduleCard">
+        <div class="schedule-header">
+            <div class="schedule-logo">20</div>
+            <div class="schedule-header-text">
+                <div class="schedule-header-title">西农06届 · 二十周年同学聚会</div>
+                <div class="schedule-header-sub">想聚日南 夏观朝槿 · 2026年7月31日—8月2日</div>
+            </div>
+        </div>
+        <div class="schedule-body" style="padding:0;">
+            <img src="/static/cover-schedule.png" alt="聚会日程与费用明细" style="width:100%;display:block;" class="cover-img">
+        </div>
+    </div>
+
+    <button class="start-btn" onclick="showForm()">开始作答</button>
+</div>
+
+<!-- Zoom Overlay -->
+<div class="zoom-overlay" id="zoomOverlay" onclick="closeZoom()">
+    <button class="zoom-close" onclick="closeZoom()">&times;</button>
+    <div class="schedule-card" id="zoomCard" style="cursor:default;" onclick="event.stopPropagation()">
+        <div class="schedule-header">
+            <div class="schedule-logo">20</div>
+            <div class="schedule-header-text">
+                <div class="schedule-header-title">西农06届 · 二十周年同学聚会</div>
+                <div class="schedule-header-sub">想聚日南 夏观朝槿 · 2026年7月31日—8月2日</div>
+            </div>
+        </div>
+        <div class="schedule-body" style="padding:0;">
+            <img src="/static/cover-schedule.png" alt="聚会日程与费用明细" style="width:100%;display:block;">
+        </div>
+    </div>
+</div>
+
+<!-- ===== Form Page ===== -->
+<div id="formPage">
+    <div class="form-card">
+        <div class="form-title">06届毕业20周年聚会问卷</div>
+        <div class="form-subtitle">请如实填写，方便我们统计安排</div>
+
+        <form id="surveyForm" onsubmit="return false;">
+            <!-- Q1: 姓名 -->
+            <div class="question-item">
+                <div class="q-label"><span class="required">*</span><span class="q-num">1.</span>姓名</div>
+                <input type="text" class="q-input" id="q1" placeholder="请输入您的姓名" required>
+            </div>
+
+            <!-- Q2: 联系电话 -->
+            <div class="question-item">
+                <div class="q-label"><span class="required">*</span><span class="q-num">2.</span>联系电话</div>
+                <input type="tel" class="q-input" id="q2" placeholder="请输入手机号码" required>
+            </div>
+
+            <!-- Q3: 班级 (NEW) -->
+            <div class="question-item">
+                <div class="q-label"><span class="required">*</span><span class="q-num">3.</span>班级</div>
+                <div class="radio-group" id="q3-group">
+                    <label class="radio-option" onclick="selectRadio('q3', '农1、2')">
+                        <input type="radio" name="q3" value="农1、2">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">农1、2</span>
+                    </label>
+                    <label class="radio-option" onclick="selectRadio('q3', '植1、2')">
+                        <input type="radio" name="q3" value="植1、2">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">植1、2</span>
+                    </label>
+                    <label class="radio-option" onclick="selectRadio('q3', '植3、4')">
+                        <input type="radio" name="q3" value="植3、4">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">植3、4</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q4: 订酒店 -->
+            <div class="question-item">
+                <div class="q-label"><span class="required">*</span><span class="q-num">4.</span>是否订7月31号晚大唐不夜城的酒店</div>
+                <div class="radio-group" id="q4-group">
+                    <label class="radio-option" onclick="selectRadio('q4', '是')">
+                        <input type="radio" name="q4" value="是">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">是</span>
+                    </label>
+                    <label class="radio-option" onclick="selectRadio('q4', '否')">
+                        <input type="radio" name="q4" value="否">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">否</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q5: 一日游/二日游 -->
+            <div class="question-item">
+                <div class="q-label"><span class="required">*</span><span class="q-num">5.</span>一日游（8.1，成人165元/人）还是二日游（8.1-8.2，成人670元/人，儿童1.2-1.4米137元/人）</div>
+                <div class="radio-group" id="q5-group">
+                    <label class="radio-option" onclick="selectRadio('q5', '一日游')">
+                        <input type="radio" name="q5" value="一日游">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">一日游（8.1，成人165元/人）</span>
+                    </label>
+                    <label class="radio-option" onclick="selectRadio('q5', '二日游')">
+                        <input type="radio" name="q5" value="二日游">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">二日游（8.1-8.2，成人670元/人，儿童1.2-1.4米137元/人）</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q6: 是否带小孩 -->
+            <div class="question-item">
+                <div class="q-label"><span class="required">*</span><span class="q-num">6.</span>是否带小孩</div>
+                <div class="radio-group" id="q6-group">
+                    <label class="radio-option" onclick="selectRadio('q6', '是')">
+                        <input type="radio" name="q6" value="是">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">是</span>
+                    </label>
+                    <label class="radio-option" onclick="selectRadio('q6', '否')">
+                        <input type="radio" name="q6" value="否">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">否</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q6b: 带几个小孩 (conditional) -->
+            <div class="question-item" id="q6b-wrapper" style="display:none;">
+                <div class="q-label"><span class="required">*</span><span class="q-num">6b.</span>带几个小孩</div>
+                <div class="radio-group" id="q6b-group">
+                    <label class="radio-option" onclick="selectRadio('q6b', '1')">
+                        <input type="radio" name="q6b" value="1">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">1个</span>
+                    </label>
+                    <label class="radio-option" onclick="selectRadio('q6b', '2')">
+                        <input type="radio" name="q6b" value="2">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">2个</span>
+                    </label>
+                    <label class="radio-option" onclick="selectRadio('q6b', '3')">
+                        <input type="radio" name="q6b" value="3">
+                        <span class="radio-circle"></span>
+                        <span class="radio-text">3个</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q7: 特别需求 -->
+            <div class="question-item">
+                <div class="q-label"><span class="q-num">7.</span>特别需求</div>
+                <textarea class="q-input q-textarea" id="q7" placeholder="如有特殊需求或备注，请在此填写..."></textarea>
+            </div>
+
+            <button type="button" class="submit-btn" id="submitBtn" onclick="submitForm()">提交</button>
+        </form>
+    </div>
+    <div class="footer">
+        <span style="color:#666;">问卷由聚会筹备组制作</span>
+    </div>
+</div>
+
+<!-- ===== Success Page ===== -->
+<div id="successPage">
+    <div class="success-icon">&#10003;</div>
+    <div class="success-title">提交成功！</div>
+    <div class="success-text">感谢您的填写，我们聚会见！</div>
+    <div style="margin-top:30px;">
+        <button class="start-btn" onclick="location.reload()" style="padding:12px 40px;font-size:15px;">返回首页</button>
+    </div>
+</div>
+
+<script>
+    // Radio selection helper
+    function selectRadio(name, value) {
+        var radios = document.getElementsByName(name);
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].value === value) {
+                radios[i].checked = true;
+                break;
+            }
+        }
+        // Update visual
+        var group = document.getElementById(name + '-group');
+        if (group) {
+            var labels = group.querySelectorAll('.radio-option');
+            for (var j = 0; j < labels.length; j++) {
+                var radio = labels[j].querySelector('input[type="radio"]');
+                if (radio && radio.checked) {
+                    labels[j].classList.add('selected');
+                } else {
+                    labels[j].classList.remove('selected');
+                }
+            }
+        }
+        // If Q6 (hasChild) is selected, show/hide Q6b
+        if (name === 'q6') {
+            var wrapper = document.getElementById('q6b-wrapper');
+            if (value === '是') {
+                wrapper.style.display = 'block';
+            } else {
+                wrapper.style.display = 'none';
+                // Uncheck q6b when hiding
+                var q6bRadios = document.getElementsByName('q6b');
+                for (var k = 0; k < q6bRadios.length; k++) {
+                    q6bRadios[k].checked = false;
+                }
+                var q6bLabels = document.querySelectorAll('#q6b-group .radio-option');
+                for (var k = 0; k < q6bLabels.length; k++) {
+                    q6bLabels[k].classList.remove('selected');
+                }
+            }
+        }
+    }
+
+    // Show form page
+    function showForm() {
+        document.getElementById('coverPage').style.display = 'none';
+        document.getElementById('formPage').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    // Zoom schedule
+    document.getElementById('scheduleCard').addEventListener('click', function(e) {
+        if (e.target.tagName !== 'BUTTON') {
+            document.getElementById('zoomOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    });
+
+    function closeZoom() {
+        document.getElementById('zoomOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Toast
+    function showToast(msg) {
+        var t = document.getElementById('toast');
+        t.textContent = msg;
+        t.style.display = 'block';
+        setTimeout(function() { t.style.display = 'none'; }, 2500);
+    }
+
+    // Validate form
+    function validateForm() {
+        if (!document.getElementById('q1').value.trim()) {
+            showToast('请填写姓名');
+            return false;
+        }
+        if (!document.getElementById('q2').value.trim()) {
+            showToast('请填写联系电话');
+            return false;
+        }
+        var phone = document.getElementById('q2').value.trim();
+        if (!/^1\d{10}$/.test(phone)) {
+            showToast('请输入正确的手机号码');
+            return false;
+        }
+        var q3Radios = document.getElementsByName('q3');
+        var q3Checked = false;
+        for (var i = 0; i < q3Radios.length; i++) {
+            if (q3Radios[i].checked) { q3Checked = true; break; }
+        }
+        if (!q3Checked) { showToast('请选择班级'); return false; }
+
+        var q4Radios = document.getElementsByName('q4');
+        var q4Checked = false;
+        for (var i = 0; i < q4Radios.length; i++) {
+            if (q4Radios[i].checked) { q4Checked = true; break; }
+        }
+        if (!q4Checked) { showToast('请选择是否订酒店'); return false; }
+
+        var q5Radios = document.getElementsByName('q5');
+        var q5Checked = false;
+        for (var i = 0; i < q5Radios.length; i++) {
+            if (q5Radios[i].checked) { q5Checked = true; break; }
+        }
+        if (!q5Checked) { showToast('请选择一日游还是二日游'); return false; }
+
+        var q6Radios = document.getElementsByName('q6');
+        var q6Checked = false;
+        for (var i = 0; i < q6Radios.length; i++) {
+            if (q6Radios[i].checked) { q6Checked = true; break; }
+        }
+        if (!q6Checked) { showToast('请选择是否带小孩'); return false; }
+
+        // Check Q6b if Q6 is '是'
+        var q6Value = '';
+        for (var i = 0; i < q6Radios.length; i++) {
+            if (q6Radios[i].checked) { q6Value = q6Radios[i].value; break; }
+        }
+        if (q6Value === '是') {
+            var q6bRadios = document.getElementsByName('q6b');
+            var q6bChecked = false;
+            for (var i = 0; i < q6bRadios.length; i++) {
+                if (q6bRadios[i].checked) { q6bChecked = true; break; }
+            }
+            if (!q6bChecked) { showToast('请选择带几个小孩'); return false; }
+        }
+
+        return true;
+    }
+
+    // Collect form data
+    function getFormData() {
+        var q3 = '', q4 = '', q5 = '', q6 = '', q6b = '';
+        var radios = document.getElementsByName('q3');
+        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) { q3 = radios[i].value; break; } }
+        radios = document.getElementsByName('q4');
+        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) { q4 = radios[i].value; break; } }
+        radios = document.getElementsByName('q5');
+        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) { q5 = radios[i].value; break; } }
+        radios = document.getElementsByName('q6');
+        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) { q6 = radios[i].value; break; } }
+        radios = document.getElementsByName('q6b');
+        for (var i = 0; i < radios.length; i++) { if (radios[i].checked) { q6b = radios[i].value; break; } }
+
+        return {
+            name: document.getElementById('q1').value.trim(),
+            phone: document.getElementById('q2').value.trim(),
+            classGroup: q3,
+            hotel: q4,
+            tour: q5,
+            hasChild: q6,
+            kidsCount: q6b,
+            special: document.getElementById('q7').value.trim()
+        };
+    }
+
+    // Submit form
+    function submitForm() {
+        if (!validateForm()) return;
+
+        var btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = '提交中...';
+
+        var data = getFormData();
+
+        fetch('/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(function(resp) { return resp.json(); })
+        .then(function(result) {
+            if (result.success) {
+                document.getElementById('formPage').style.display = 'none';
+                document.getElementById('successPage').style.display = 'block';
+                window.scrollTo(0, 0);
+            } else {
+                showToast('提交失败，请稍后重试');
+                btn.disabled = false;
+                btn.textContent = '提交';
+            }
+        })
+        .catch(function(err) {
+            showToast('网络错误，请稍后重试');
+            btn.disabled = false;
+            btn.textContent = '提交';
+        });
+    }
+</script>
+</body>
+</html>
