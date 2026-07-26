@@ -1,0 +1,38 @@
+[
+  {
+    "name": "王晓东",
+    "phone": "18811052498",
+    "classGroup": "农1、2",
+    "hotel": "是",
+    "tour": "一日游",
+    "hasChild": "是",
+    "kidsCount": "1",
+    "special": "准备8月2日高铁返程",
+    "id": 1,
+    "submit_time": "2026-07-22 14:29:59"
+  },
+  {
+    "name": "陈萍",
+    "phone": "13976727800",
+    "classGroup": "农1、2",
+    "hotel": "是",
+    "tour": "二日游",
+    "hasChild": "是",
+    "kidsCount": "2",
+    "special": "",
+    "id": 2,
+    "submit_time": "2026-07-22 14:35:07"
+  },
+  {
+    "name": "蒋华丰",
+    "phone": "13570235394",
+    "classGroup": "农1、2",
+    "hotel": "是",
+    "tour": "一日游",
+    "hasChild": "否",
+    "kidsCount": "",
+    "special": "建议8.1日还是回学校会好一点",
+    "id": 3,
+    "submit_time": "2026-07-22 14:41:25"
+  }
+]
